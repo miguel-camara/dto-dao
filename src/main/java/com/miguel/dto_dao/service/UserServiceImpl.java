@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.miguel.dto_dao.dto.UserDto;
 import com.miguel.dto_dao.entity.User;
 import com.miguel.dto_dao.repository.UserRepository;
 
@@ -24,6 +25,7 @@ public class UserServiceImpl implements IUserService {
   @Transactional
   @Override
   public User saveUser(User user) {
+
     return this.userRepository.save(user);
   }
 
