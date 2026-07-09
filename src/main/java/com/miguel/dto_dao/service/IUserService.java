@@ -2,16 +2,12 @@ package com.miguel.dto_dao.service;
 
 import java.util.List;
 
-import com.miguel.dto_dao.entity.User;
+import com.miguel.dto_dao.dto.UserDto;
+// import com.miguel.dto_dao.entity.User;
 
 public interface IUserService {
-  List<User> findAllUser();
+  List<UserDto> findAll();
 
-  User saveUser(User user);
+  UserDto save(UserDto user);
 
-  // List<EmployeeDTO> getAllEmployees();
-  // Optional<EmployeeDTO> getEmployeeById(Long id);
-  // EmployeeDTO saveEmployee(EmployeeDTO employeeDTO);
-  // EmployeeDTO updateEmployee(Long id, EmployeeDTO employeeDTO);
-  // void deleteEmployee(Long id);
 }

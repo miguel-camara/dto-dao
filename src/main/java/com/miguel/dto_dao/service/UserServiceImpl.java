@@ -18,15 +18,17 @@ public class UserServiceImpl implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAllUser() {
-    return userRepository.findAll();
+  public List<UserDto> findAll() {
+    return this.userRepository.findAll().stream().map(user -> new UserDto(user.getName())).toList();
   }
 
   @Transactional
   @Override
-  public User saveUser(User user) {
-
-    return this.userRepository.save(user);
+  public UserDto save(UserDto userDto) {
+    User user = new User();
+    user.setName(userDto.getName());
+    var res = this.userRepository.save(user);
+    return UserDto.builder().name(res.getName()).build();
   }
 
 }

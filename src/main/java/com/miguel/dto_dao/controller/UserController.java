@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.miguel.dto_dao.dto.UserDto;
 import com.miguel.dto_dao.entity.User;
 import com.miguel.dto_dao.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,14 +25,14 @@ public class UserController {
   private IUserService iUserService;
 
   @GetMapping()
-  public List<User> list() {
-    return iUserService.findAllUser();
+  public List<UserDto> list() {
+    return iUserService.findAll();
   }
 
   @PostMapping()
-  public User create(@RequestBody User user) {
+  public UserDto create(@RequestBody UserDto user) {
 
-    return iUserService.saveUser(user);
+    return iUserService.save(user);
   }
 
 }
