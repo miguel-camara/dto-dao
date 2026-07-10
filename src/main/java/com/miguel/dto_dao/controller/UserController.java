@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class CursorPageResponse<T> {
   private List<T> data;
   private int pageSize;
-  // private Long nextCursor;
+  private Long nextCursor;
   private boolean hasNext;
 }

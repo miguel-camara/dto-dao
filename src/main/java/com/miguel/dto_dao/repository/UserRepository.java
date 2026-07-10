@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   @Query("""
           SELECT u FROM User u
           WHERE (:cursor IS NULL OR u.id > :cursor)
+          ORDER BY u.createdAt ASC
       """)
 
   public List<User> fetchNextPage(@Param("cursor") Long cursor, Pageable pageable);
