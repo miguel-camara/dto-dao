@@ -55,6 +55,10 @@ public class UserServiceImpl implements IUserService {
     // default page = 0, size = 10 [0-9]
     Pageable pageable = PageRequest.of(0, size);
 
+    System.out.println("---------------------------");
+    System.out.println(cursor);
+    System.out.println("---------------------------");
+
     // fetch next page records
     List<User> users = userRepository.fetchNextPage(cursor, pageable);
     // List<UserDto> users = userRepository.fetchNextPage(cursor,

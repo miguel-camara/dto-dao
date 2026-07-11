@@ -1,24 +1,49 @@
 package com.miguel.dto_dao.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.miguel.dto_dao.dto.CursorPageResponse;
 import com.miguel.dto_dao.dto.UserDto;
 import com.miguel.dto_dao.entity.User;
 import com.miguel.dto_dao.service.IUserService;
+import com.miguel.dto_dao.util.PdfGenerator;
 
+import jakarta.servlet.http.HttpServletResponse;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
 public class UserController {
 
   private final IUserService iUserService;
+  private final PdfGenerator generator;
+
+  @GetMapping("/download")
+  public void downloadFile(HttpServletResponse response) throws IOException {
+    byte[] pdfReport = generator.getPDF().toByteArray();
+
+    String mimeType = "application/pdf";
+    response.setContentType(mimeType);
+    response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", "reporte.pdf"));
+
+    response.setContentLength(pdfReport.length);
+
+    ByteArrayInputStream inStream = new ByteArrayInputStream(pdfReport);
+
+    FileCopyUtils.copy(inStream, response.getOutputStream());
+  }
 
   @GetMapping()
   public List<UserDto> list() {
@@ -38,6 +63,15 @@ public class UserController {
   public CursorPageResponse<User> list(
       @RequestParam(required = false) Long cursor,
       @RequestParam(defaultValue = "10") int size) {
+
+    Optional<Long> res = Optional.ofNullable(cursor);
+
+    if (res.isPresent()) {
+      log.info("-------------------");
+      log.info(cursor.toString());
+      log.info("-------------------");
+    }
+
     return this.iUserService.findAll(cursor, size);
   }
 
