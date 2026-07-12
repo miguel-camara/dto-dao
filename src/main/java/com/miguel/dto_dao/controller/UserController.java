@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,8 @@ import com.miguel.dto_dao.dto.CursorPageResponse;
 import com.miguel.dto_dao.dto.UserDto;
 import com.miguel.dto_dao.entity.User;
 import com.miguel.dto_dao.service.IUserService;
-import com.miguel.dto_dao.util.PdfGenerator;
+import com.miguel.dto_dao.util.GeneradorEstadoCuenta;
+// import com.miguel.dto_dao.util.PdfGenerator;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -28,11 +31,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserController {
 
   private final IUserService iUserService;
-  private final PdfGenerator generator;
+  private final GeneradorEstadoCuenta generator;
 
   @GetMapping("/download")
-  public void downloadFile(HttpServletResponse response) throws IOException {
-    byte[] pdfReport = generator.getPDF().toByteArray();
+  public void down(HttpServletResponse response) throws IOException {
+    byte[] pdfReport = generator.getPDF2().toByteArray();
 
     String mimeType = "application/pdf";
     response.setContentType(mimeType);
@@ -43,6 +46,20 @@ public class UserController {
     ByteArrayInputStream inStream = new ByteArrayInputStream(pdfReport);
 
     FileCopyUtils.copy(inStream, response.getOutputStream());
+  }
+
+  @GetMapping(value = "/estado-cuenta", produces = MediaType.APPLICATION_PDF_VALUE)
+  public ResponseEntity<byte[]> descargarEstadoCuenta() {
+    byte[] pdfBytes = generator.generarEstadoCuentaPdf();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_PDF);
+    // "inline" para abrir en el navegador, "attachment" para forzar descarga
+    headers.setContentDispositionFormData("attachment", "estado_cuenta.pdf");
+
+    return ResponseEntity.ok()
+        .headers(headers)
+        .body(pdfBytes);
   }
 
   @GetMapping()
