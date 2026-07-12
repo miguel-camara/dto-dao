@@ -1,37 +1,10 @@
 package com.miguel.dto_dao.util;
 
-// import com.itextpdf.kernel.colors.ColorConstant;
-// import com.itextpdf.kernel.colors.DeviceRgb;
-// import com.itextpdf.kernel.pdf.PdfDocument;
-// import com.itextpdf.kernel.pdf.PdfWriter;
-// import com.itextpdf.layout.Document;
-// import com.itextpdf.layout.element.Cell;
-// import com.itextpdf.layout.element.Paragraph;
-// import com.itextpdf.layout.element.Table;
-// import com.itextpdf.layout.properties.TextAlignment;
-// import com.itextpdf.layout.properties.UnitValue;
-/* import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfDocument;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter; */
-
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import org.springframework.stereotype.Component;
 
-import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
-import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -87,26 +60,23 @@ public class GeneradorEstadoCuenta {
     return baos.toByteArray();
   }
 
-  public ByteArrayOutputStream getPDF2() {
+  public byte[] getPDF() {
 
-    String dest = "estado_de_cuenta.pdf";
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-    try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-
-      PdfWriter writer = new PdfWriter(dest);
-
-      PdfDocument pdf = new PdfDocument(writer);
-      Document document = new Document(pdf);
+    try (PdfWriter writer = new PdfWriter(bos);
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf)) {
 
       // Colores personalizados
       DeviceRgb primaryColor = new DeviceRgb(0, 51, 102); // Azul marino
-      DeviceRgb secondaryColor = new DeviceRgb(240, 240, 240); // Gris claro
+      // DeviceRgb secondaryColor = new DeviceRgb(240, 240, 240); // Gris claro
 
       // 1. Encabezado
       Paragraph title = new Paragraph("ESTADO DE CUENTA")
           .setFontSize(20)
           .setFontColor(primaryColor)
-          // .setBackgroundColor(com.itextpdf.kernel.colors.ColorConstants.)
+          .setBold()
           .setTextAlignment(TextAlignment.RIGHT);
       document.add(title);
 
@@ -135,10 +105,10 @@ public class GeneradorEstadoCuenta {
       Table summaryTable = new Table(new float[] { 2, 2, 2, 2 });
       summaryTable.setWidth(UnitValue.createPercentValue(100));
 
-      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Saldo Anterior")));
-      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Total Cargos")));
-      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Total Abonos")));
-      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Saldo Actual")));
+      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Saldo Anterior").setBold()));
+      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Total Cargos").setBold()));
+      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Total Abonos").setBold()));
+      summaryTable.addHeaderCell(new Cell().add(new Paragraph("Saldo Actual").setBold()));
 
       summaryTable.addCell("$500.00");
       summaryTable.addCell("$1,200.00");
@@ -156,14 +126,14 @@ public class GeneradorEstadoCuenta {
       movementsTable.setWidth(UnitValue.createPercentValue(100));
 
       // Encabezados de tabla
-      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor)
-          .add(new Paragraph("Fecha").setFontColor(ColorConstants.WHITE)));
-      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor)
-          .add(new Paragraph("Descripción").setFontColor(ColorConstants.WHITE)));
-      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor)
-          .add(new Paragraph("Cargos").setFontColor(ColorConstants.WHITE)));
-      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor)
-          .add(new Paragraph("Abonos").setFontColor(ColorConstants.WHITE)));
+      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor).setBold()
+          .add(new Paragraph("Fecha").setFontColor(ColorConstants.WHITE).setBold()));
+      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor).setBold()
+          .add(new Paragraph("Descripción").setFontColor(ColorConstants.WHITE).setBold()));
+      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor).setBold()
+          .add(new Paragraph("Cargos").setFontColor(ColorConstants.WHITE).setBold()));
+      movementsTable.addHeaderCell(new Cell().setBackgroundColor(primaryColor).setBold()
+          .add(new Paragraph("Abonos").setFontColor(ColorConstants.WHITE).setBold()));
 
       // Fila 1
       movementsTable.addCell("01/06/2026");
@@ -190,12 +160,11 @@ public class GeneradorEstadoCuenta {
       document.close();
       System.out.println("PDF generado correctamente.");
 
-      return bos;
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    return null;
+    return bos.toByteArray();
 
   }
 }
